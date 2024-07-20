@@ -1,0 +1,1011 @@
+{
+	"info": {
+		"_postman_id": "a2e2b137-5c95-4368-b9ad-5985b4a8477a",
+		"name": "Pet_petstore",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20672644"
+	},
+	"item": [
+		{
+			"name": "Pet",
+			"item": [
+				{
+					"name": "Find Pets by status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"})\r",
+									"\r",
+									"pm.test('Response has the required fields', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('array');\r",
+									"    responseData.forEach(function (pet) {\r",
+									"        pm.expect(pet).to.have.property('id');\r",
+									"        pm.expect(pet).to.have.property('category');\r",
+									"        pm.expect(pet).to.have.property('name');\r",
+									"        pm.expect(pet).to.have.property('photoUrls');\r",
+									"        pm.expect(pet).to.have.property('tags');\r",
+									"        pm.expect(pet).to.have.property('status');\r",
+									"    });\r",
+									"})\r",
+									"\r",
+									"pm.test('ID is a non-negative integer', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    responseData.forEach(function (pet) {\r",
+									"        pm.expect(pet.id).to.be.a('number').and.to.be.at.least(0, 'ID should be a non-negative integer');\r",
+									"    });\r",
+									"})\r",
+									"\r",
+									"pm.test('Name is a non-empty string', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('array');\r",
+									"    responseData.forEach(function (pet) {\r",
+									"        pm.expect(pet.name).to.be.a('string').and.to.have.lengthOf.at.least(1, 'Name should not be empty');\r",
+									"    });\r",
+									"})\r",
+									"\r",
+									"pm.test('Tags array must contain at least one element', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('array');\r",
+									"    responseData.forEach(pet => {\r",
+									"        pm.expect(pet.tags).to.be.an('array').that.is.not.empty;\r",
+									"    });\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/pet/findByStatus?status=available",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pet",
+								"findByStatus"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "available"
+								},
+								{
+									"key": "status",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find Pets by Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"})\r",
+									"\r",
+									"pm.test('Content-Type is application/json', function () {\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+									"})\r",
+									"\r",
+									"pm.test('Id is a non-negative integer', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData.id).to.be.a('number').and.to.be.at.least(0);\r",
+									"})\r",
+									"\r",
+									"pm.test('Category object should exist and have valid properties', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.category).to.exist;\r",
+									"    pm.expect(responseData.category.id).to.be.a('number');\r",
+									"    pm.expect(responseData.category.name).to.be.a('string');\r",
+									"})\r",
+									"\r",
+									"pm.test('PhotoUrls array is present and contains at least one element', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.photoUrls).to.exist.and.to.be.an('array').that.is.not.empty;\r",
+									"})\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/pet/3",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pet",
+								"3"
+							],
+							"query": [
+								{
+									"key": "Id",
+									"value": "3",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update an existing pet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test('Id field is a non-negative integer', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData.id).to.be.a('number');\r",
+									"    pm.expect(responseData.id).to.be.at.least(0, 'Id should be a non-negative integer');\r",
+									"})\r",
+									"\r",
+									"pm.test('Validate category object contains id and name fields', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData.category).to.exist;\r",
+									"    pm.expect(responseData.category.id).to.exist;\r",
+									"    pm.expect(responseData.category.name).to.exist;\r",
+									"})\r",
+									"\r",
+									"pm.test('Name field must be a non-empty string', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.name).to.be.a('string').and.to.have.lengthOf.at.least(1, 'Name should not be empty');\r",
+									"})\r",
+									"\r",
+									"pm.test('PhotoUrls array is present and contains at least one element', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.have.property('photoUrls').that.is.an('array').and.to.have.lengthOf.at.least(1, 'PhotoUrls array should contain at least one element');\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 3,\r\n    \"category\": {\r\n        \"id\": 3,\r\n        \"name\": \"wolf\"\r\n    },\r\n    \"name\": \"wolf\",\r\n    \"photoUrls\": [\r\n        \"string\"\r\n    ],\r\n    \"tags\": [\r\n        {\r\n            \"id\": 3,\r\n            \"name\": \"wolf\"\r\n        }\r\n    ],\r\n    \"status\": \"available\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pet",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deletes a pet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 404', function () {\r",
+									"    pm.expect(pm.response.code).to.equal(404);\r",
+									"})\r",
+									"\r",
+									"pm.test('Response has the required fields - code, type, and message', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.code).to.exist;\r",
+									"    pm.expect(responseData.type).to.exist;\r",
+									"    pm.expect(responseData.message).to.exist;\r",
+									"})\r",
+									"\r",
+									"pm.test('Type is a non-empty string', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.type).to.be.a('string').and.to.have.lengthOf.at.least(1, 'Type should not be empty');\r",
+									"})\r",
+									"\r",
+									"pm.test('Message is a non-empty string', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData.message).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, 'Message should not be empty');\r",
+									"})\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/pet/{petId}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pet",
+								"{petId}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Updates a pet in store",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "wolva",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "sold",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pet/3",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pet",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add a new pet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test('Content type is application/json', function () {\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+									"})\r",
+									"\r",
+									"pm.test('Validate the structure of the response object', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.id).to.exist.and.to.be.a('number');\r",
+									"    pm.expect(responseData.category).to.exist.and.to.be.an('object');\r",
+									"    pm.expect(responseData.category.id).to.exist.and.to.be.a('number');\r",
+									"    pm.expect(responseData.category.name).to.exist.and.to.be.a('string');\r",
+									"    pm.expect(responseData.name).to.exist.and.to.be.a('string');\r",
+									"    pm.expect(responseData.photoUrls).to.exist.and.to.be.an('array');\r",
+									"    responseData.photoUrls.forEach(function (url) {\r",
+									"        pm.expect(url).to.be.a('string');\r",
+									"    });\r",
+									"    pm.expect(responseData.tags).to.exist.and.to.be.an('array');\r",
+									"    responseData.tags.forEach(function (tag) {\r",
+									"        pm.expect(tag.id).to.exist.and.to.be.a('number');\r",
+									"        pm.expect(tag.name).to.exist.and.to.be.a('string');\r",
+									"    });\r",
+									"    pm.expect(responseData.status).to.exist.and.to.be.a('string');\r",
+									"})\r",
+									"\r",
+									"pm.test('Name and status fields should be non-empty strings', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.name).to.be.a('string').and.to.have.lengthOf.at.least(1, 'Name should not be empty');\r",
+									"    pm.expect(responseData.status).to.be.a('string').and.to.have.lengthOf.at.least(1, 'Status should not be empty');\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 3,\r\n  \"category\": {\r\n    \"id\": 3,\r\n    \"name\": \"wolf\"\r\n  },\r\n  \"name\": \"wolf\",\r\n  \"photoUrls\": [\r\n    \"string\"\r\n  ],\r\n  \"tags\": [\r\n    {\r\n      \"id\": 3,\r\n      \"name\": \"wolf\"\r\n    }\r\n  ],\r\n  \"status\": \"available\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pet",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "uploads an image",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/pet/{petId}/uploadImage",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pet",
+								"{petId}",
+								"uploadImage"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "store",
+			"item": [
+				{
+					"name": "Return pet invent by status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test('Response has the required fields', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.have.property('sold');\r",
+									"    pm.expect(responseData).to.have.property('string');\r",
+									"    pm.expect(responseData).to.have.property('pending');\r",
+									"    pm.expect(responseData).to.have.property('available');\r",
+									"})\r",
+									"\r",
+									"pm.test('Content-Type header is application/json', function () {\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+									"})\r",
+									"\r",
+									"pm.test('Response time is less than 200ms', function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/store/inventory",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"store",
+								"inventory"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find purchase order by ID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "pm.test('Response status code is 200', function () {\r\n    pm.expect(pm.response.code).to.equal(200);\r\n})\r\n\r\npm.test('Response has the required fields', function () {\r\n    const responseData = pm.response.json();\r\n    pm.expect(responseData).to.be.an('object');\r\n    pm.expect(responseData).to.have.property('id');\r\n    pm.expect(responseData).to.have.property('petId');\r\n    pm.expect(responseData).to.have.property('quantity');\r\n    pm.expect(responseData).to.have.property('shipDate');\r\n    pm.expect(responseData).to.have.property('status');\r\n    pm.expect(responseData).to.have.property('complete');\r\n})\r\n\r\npm.test('ShipDate is in a valid date format', function () {\r\n    const responseData = pm.response.json();\r\n    pm.expect(responseData.shipDate).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);\r\n})\r\n\r\npm.test('Quantity is a non-negative integer', function () {\r\n    const responseData = pm.response.json();\r\n    pm.expect(responseData).to.be.an('object');\r\n    pm.expect(responseData.quantity).to.be.a('number').and.to.satisfy(quantity => quantity >= 0, 'Quantity must be a non-negative integer');\r\n})",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/store/order/3",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"store",
+								"order",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Place an order fot a pet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test('Id, petId, and quantity fields are present and not null', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.id).to.exist.and.to.not.be.null;\r",
+									"    pm.expect(responseData.petId).to.exist.and.to.not.be.null;\r",
+									"    pm.expect(responseData.quantity).to.exist.and.to.not.be.null;\r",
+									"})\r",
+									"\r",
+									"pm.test('Status field should not be empty', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData.status).to.exist.and.to.not.be.empty;\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 3,\r\n  \"petId\": 3,\r\n  \"quantity\": 12,\r\n  \"shipDate\": \"2024-05-25T03:46:08.681Z\",\r\n  \"status\": \"placed\",\r\n  \"complete\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/store/order",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"store",
+								"order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete purchase order by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"})\r",
+									"\r",
+									"pm.test('Response has the required fields - code, type, and message', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData).to.have.property('code');\r",
+									"    pm.expect(responseData).to.have.property('type');\r",
+									"    pm.expect(responseData).to.have.property('message');\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/store/order/3",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"store",
+								"order",
+								"3"
+							],
+							"query": [
+								{
+									"key": "orderId",
+									"value": "3",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "Get user by username",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test('Content type is application/json', function () {\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+									"})\r",
+									"\r",
+									"pm.test('Response has the required fields - code, type, and message', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData.username).to.eq('heru');\r",
+									"    pm.expect(responseData.firstName).to.eq('heru');\r",
+									"    pm.expect(responseData.lastName).to.eq('hera');\r",
+									"    pm.expect(responseData.email).to.eq('heru@gmail.com');\r",
+									"})\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/heru",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"heru"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logs user into system",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									"\r",
+									"pm.test('Response has the required fields - code, type, and message', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData).to.have.property('code');\r",
+									"    pm.expect(responseData).to.have.property('type');\r",
+									"    pm.expect(responseData).to.have.property('message');\r",
+									"})\r",
+									"\r",
+									"pm.test('Content-Type header is application/json', function () {\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+									"})\r",
+									"\r",
+									"pm.test('Code is a non-negative integer', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData.code).to.exist.and.to.be.a('number');\r",
+									"    pm.expect(responseData.code).to.be.at.least(0);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\" :\"tester_account\",\r\n    \"password\" : 12345678\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logs out user",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "pm.test('Response status code is 200', function () {\r\n    pm.response.to.have.status(200);\r\n})\r\n\r\npm.test('Content-Type is application/json', function () {\r\n    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r\n})\r\n\r\npm.test('Response has the required fields - code, type, and message', function () {\r\n    const responseData = pm.response.json();\r\n    pm.expect(responseData).to.be.an('object');\r\n    pm.expect(responseData).to.have.property('code');\r\n    pm.expect(responseData).to.have.property('type');\r\n    pm.expect(responseData).to.have.property('message');\r\n})\r\n\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"})\r",
+									"\r",
+									"pm.test('Response has the required fields - code, type, and message', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData).to.have.property('code');\r",
+									"    pm.expect(responseData).to.have.property('type');\r",
+									"    pm.expect(responseData).to.have.property('message');\r",
+									"})\r",
+									"\r",
+									"pm.test('Code is a non-negative integer', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData.code).to.exist;\r",
+									"    pm.expect(responseData.code).to.be.a('number');\r",
+									"    pm.expect(responseData.code).to.be.at.least(0);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"id\": 123,\r\n\"username\": \"tester_account\",\r\n\"firstName\": \"Akun\",\r\n\"lastName\": \"testing\",\r\n\"email\": \"testing@mail.com\",\r\n\"password\": \"12345678\",\r\n\"phone\": \"081233456789\",\r\n\"userStatus\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create list of users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"})\r",
+									"\r",
+									"pm.test('Response Content-Type header is application/json', function () {\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+									"})\r",
+									"\r",
+									"pm.test('Response has the required fields - code, type, and message', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData).to.have.property('code');\r",
+									"    pm.expect(responseData).to.have.property('type');\r",
+									"    pm.expect(responseData).to.have.property('message');\r",
+									"})\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n  {\r\n    \"id\": 1,\r\n    \"username\": \"heru\",\r\n    \"firstName\": \"heru\",\r\n    \"lastName\": \"hera\",\r\n    \"email\": \"heru@gmail.com\",\r\n    \"password\": \"123heru\",\r\n    \"phone\": \"083896627474\",\r\n    \"userStatus\": 0\r\n  },\r\n   {\r\n    \"id\": 2,\r\n    \"username\": \"purnama\",\r\n    \"firstName\": \"purnama\",\r\n    \"lastName\": \"purnama\",\r\n    \"email\": \"purnama@gmail.com\",\r\n    \"password\": \"purnama123\",\r\n    \"phone\": \"083896627476\",\r\n    \"userStatus\": 0\r\n  }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/createWithArray",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"createWithArray"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/{{username}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"{{username}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Updated User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.expect(pm.response.code).to.equal(200);\r",
+									"})\r",
+									"\r",
+									"pm.test('Response has the required fields - code, type, and message', function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData).to.have.property('code');\r",
+									"    pm.expect(responseData).to.have.property('type');\r",
+									"    pm.expect(responseData).to.have.property('message');\r",
+									"})\r",
+									"\r",
+									"pm.test('Content type is application/json', function () {\r",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 3,\r\n    \"username\": \"heru\",\r\n    \"firstName\": \"herupurnama\",\r\n    \"lastName\": \"hera\",\r\n    \"email\": \"heru@gmail.com\",\r\n    \"password\": \"123heru\",\r\n    \"phone\": \"083896627474\",\r\n    \"userStatus\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/heru",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"heru"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
